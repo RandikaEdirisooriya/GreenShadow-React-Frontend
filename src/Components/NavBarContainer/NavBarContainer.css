@@ -1,0 +1,71 @@
+/* Header Container */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #2d2d2d; /* Dark gray background */
+    color: #fff; /* White text color */
+    height: 60px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Toggle Button */
+  .header-toggle {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #fff;
+  }
+  
+  /* Search Bar */
+  .search-container {
+    flex-grow: 1; /* Adjust the grow factor for better spacing */
+    margin: 0 20px;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  .search-container .form-control {
+    background-color: #424242; /* Lighter gray for search box */
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    color: #fff;
+    width: 80%; /* Ensure the input scales properly */
+    max-width: 300px; /* Limit the maximum width for the search box */
+  }
+  
+  .search-container .form-control::placeholder {
+    color: #bbb; /* Light gray placeholder */
+  }
+  
+  /* Icons and Profile */
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .icon-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .icon-btn:hover {
+    color: #00ff9d; /* Gold hover effect */
+  }
+  
+  /* Profile Avatar */
+  .profile-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+  

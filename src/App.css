@@ -1,0 +1,27 @@
+
+:root {
+  --header-height: 3rem;
+  --nav-width: 68px;
+  --nav-width-expanded: 250px;
+  --first-color: rgba(0, 224, 255, 0.79);
+  --first-color-light: #AFA5D9;
+  --white-color: rgb(255, 255, 255);
+  --body-font: 'Nunito', sans-serif;
+  --glass-background: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --z-fixed: 100;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--body-font);
+  background: linear-gradient(135deg, rgba(47, 47, 47, 0.98) 0%, #011117 100%);
+  color: var(--white-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
