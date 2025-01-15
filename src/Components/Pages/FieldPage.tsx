@@ -1,5 +1,5 @@
 import React from 'react'
-import './Styles/FieldPage.css'
+
 import HeaderContainer from '../HeadersContainer/HeaderContainer'
 import BodyContainer from '../BodyContainer/BodyContainer'
 

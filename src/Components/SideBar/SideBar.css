@@ -5,10 +5,13 @@
     position: fixed;
     left: 0;
      /* Change from top: 10; to top: 0; */
-    background-color: rgba(255, 255, 255, 0.021);
+  
     color: white;
     padding: 20px 0;
     transition: transform 0.3s ease-in-out;
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.03); ;
+    backdrop-filter: blur(10px);
   }
   
   /* Nav List */
@@ -31,7 +34,8 @@
   }
   
   .nav_link:hover {
-    background-color: #3A3A3A;
+    color:#00ff9d;
+    background: rgba(255, 255, 255, 0.1);
   }
   
   /* Icon styling inside nav link */

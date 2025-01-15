@@ -13,10 +13,11 @@ import EquipmentPage from './Components/Pages/EquipmentPage.tsx';
 import VehiclePage from './Components/Pages/VehiclePage.tsx';
 import LogsPage from './Components/Pages/LogsPage.tsx';
 import StaffFieldPage from './Components/Pages/StaffFieldPage.tsx';
+import Home from './Components/Pages/HomePage/Home.tsx';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
   },
   {
     path: "/field",
