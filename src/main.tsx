@@ -6,12 +6,12 @@ import{
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import FieldPage from './Components/Pages/FieldPage.tsx';
-import StaffPage from './Components/Pages/StaffPage.tsx';
-import CropPage from './Components/Pages/CropPage.tsx';
-import EquipmentPage from './Components/Pages/EquipmentPage.tsx';
-import VehiclePage from './Components/Pages/VehiclePage.tsx';
-import LogsPage from './Components/Pages/LogsPage.tsx';
+import FieldPage from './Components/Pages/FieldPage/FieldPage.tsx';
+import StaffPage from './Components/Pages/StaffPage/StaffPage.tsx';
+import CropPage from './Components/Pages/CropPage/CropPage.tsx';
+import EquipmentPage from './Components/Pages/EquipmentPage/EquipmentPage.tsx';
+import VehiclePage from './Components/Pages/VehiclePage/VehiclePage.tsx';
+import LogsPage from './Components/Pages/LogsPage/LogsPage.tsx';
 import StaffFieldPage from './Components/Pages/StaffFieldPage.tsx';
 import Home from './Components/Pages/HomePage/Home.tsx';
 const router = createBrowserRouter([
