@@ -1,56 +1,57 @@
 import React from 'react';
 import FormControl from './FormControl';
 
-type props={
-  onClose: () => void,
-  inputs: any,
-  btnLabel: string
-  title: string
+type Props = {
+    onClose: () => void;
+    inputs: any; // Array of input fields
+    btnLabel: string;
+    title: string;
+    onInputChange: (id: string, value: string) => void; // Function to handle input changes
+    onSubmit: () => void; // Function to handle form submission
+    formData: any; // Holds form data to pre-fill fields
+};
 
-}
+const ModalPage: React.FC<Props> = ({ onClose, inputs, btnLabel, title, onInputChange, onSubmit, formData }) => {
+    // Handle input changes within the modal
+    const handleInputChange = (id: string, value: string) => {
+        onInputChange(id, value); // Call the parent component's input change handler
+    };
 
-function ModalPage({onClose,inputs,btnLabel ,title}:props ) {
-  return (
-    <div
-      className="modal show"
-      id="exampleModalLong"
-      aria-labelledby="exampleModalLongTitle"
-      style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
-    >
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className="modal-header">
-            <div className="logo floating">
-              <span className="logo-icon">🌳</span>
+    const handleSubmit = () => {
+        onSubmit(); // Call the parent component's submit handler
+    };
+
+    return (
+        <div
+            className="modal show"
+            style={{ display: 'block', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+        >
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        
+                        <h1>{title}</h1>
+                        <button
+                            type="button"
+                            className="btn-close"
+                            onClick={onClose} // Close the modal
+                        />
+                    </div>
+                    <div className="modal-body">
+                        {/* Render form controls dynamically based on inputs */}
+                        <FormControl 
+                            inputs={inputs}
+                           
+                            onInputChange={handleInputChange}
+                        />
+                        <button className="btn btn-primary w-100" onClick={handleSubmit}>
+                            {btnLabel} {/* Button label passed as prop */}
+                        </button>
+                    </div>
+                </div>
             </div>
-            <br />
-            <h1>{title}</h1>
-            <button
-              type="button"
-              className="btn-close"
-              style={{ color: 'red' }}
-              onClick={onClose} // Close modal on button click
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="login-container1">
-              <form>
-                <FormControl inputs={inputs}/>
-                <button 
-                  type="button"
-                  className="btn1 btn-primary1 w-100 mb-3"
-                  onClick={() => console.log('Add Crop button clicked')}
-                >
-                 {btnLabel}
-                </button>
-              </form>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
-}
+    );
+};
 
 export default ModalPage;

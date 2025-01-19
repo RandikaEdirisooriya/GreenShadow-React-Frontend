@@ -6,7 +6,7 @@ import BodyContainer from '../../BodyContainer/BodyContainer';
 function Home() {
     return (
         <div>
-            <HeaderContainer />
+          
             <BodyContainer>
                 <div className="content">
                     <div className="d-flex justify-content-between align-items-center mb-5">

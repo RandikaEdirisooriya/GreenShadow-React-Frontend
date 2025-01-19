@@ -14,10 +14,13 @@ import VehiclePage from './Components/Pages/VehiclePage/VehiclePage.tsx';
 import LogsPage from './Components/Pages/LogsPage/LogsPage.tsx';
 import StaffFieldPage from './Components/Pages/StaffFieldPage.tsx';
 import Home from './Components/Pages/HomePage/Home.tsx';
+
+import { Provider } from 'react-redux';
+import store from './store.ts';
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />,
+    element: <App />,
   },
   {
     path: "/field",
@@ -51,6 +54,9 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
+  
 )

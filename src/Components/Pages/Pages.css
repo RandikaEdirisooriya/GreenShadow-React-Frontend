@@ -184,3 +184,14 @@ h1 {
 }
 
 
+
+
+
+.action-btns .btn-link {
+    font-size: 14px;
+}
+
+.action-btns .btn-link:hover {
+    transform: translateY(-8px) scale(1.0);
+    opacity: 0.8;
+}

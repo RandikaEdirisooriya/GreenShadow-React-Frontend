@@ -1,12 +1,28 @@
-// components/CropTable/CropTable.tsx
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import ModalPage from '../Modal/modalPage';
+import { removeItem } from '../../../Reducer/slice/VehicleItem';
+import { VehicleData } from '../../../models/VehicleData';
 
 interface TableProps {
-  rows: Array<Record<string, string | number>>; // Array of objects where each object can have string or number values
-  headers: string[]; // Array of strings for headers
+  rows: Array<VehicleData>;
+  headers: string[];
+  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  handleModalShow: () => void;
 }
 
-function Table({ rows, headers }: TableProps) {
+function Table({ rows, headers, setFormData, handleModalShow }: TableProps) {
+  const dispatch = useDispatch();
+
+  const handleDelete = (id: string) => {
+    dispatch(removeItem(id));
+  };
+
+  const handleEdit = (vehicle: VehicleData) => {
+    setFormData(vehicle);
+    handleModalShow();
+  };
+
   return (
     <div className="table-responsive">
       <table className="table table-striped table-hover">
@@ -16,6 +32,7 @@ function Table({ rows, headers }: TableProps) {
               {headers.map((header, index) => (
                 <th key={index}>{header}</th>
               ))}
+              <th>Actions</th>
             </tr>
           </thead>
         )}
@@ -25,6 +42,22 @@ function Table({ rows, headers }: TableProps) {
               {Object.values(row).map((value, colIndex) => (
                 <td key={colIndex}>{value}</td>
               ))}
+              <td>
+                <div className="action-btns">
+                  <button
+                    className="btn btn-link text-warning p-0 me-2 edit-btn"
+                    onClick={() => handleEdit(row)}
+                  >
+                    <i className="bi bi-pencil-fill"></i>
+                  </button>
+                  <button
+                    className="btn btn-link text-danger p-0 delete-btn"
+                    onClick={() => handleDelete(row.id as string)}
+                  >
+                    <i className="bi bi-trash-fill"></i>
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
