@@ -10,26 +10,71 @@ import GlassCard from '../../Components-Pages/GlassCard/GlassCard';
 import Button from '../../Components-Pages/Button/Button';
 import Table from '../../Components-Pages/Table/Table';
 import ModalPage from '../../Components-Pages/Modal/modalPage';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../store';
+import { addItem, updateItem } from '../../../Reducer/slice/LogItem';
 function LogsPage() {
-   const [showModal, setShowModal] = useState(false);
-      
-        const handleModalShow = () => setShowModal(true);
-        const handleModalHide = () => setShowModal(false);
-  const rows: Record<string, string | number>[] = [
-  
-  ];
+   const logs = useSelector((state: RootState) => state.log.items);
+     const dispatch = useDispatch();
+    const [showModal, setShowModal] = useState(false);
+     const [updateMode, setUpdateMode] = useState(false);
+     const [formData, setFormData] = useState({
+      id: '',
+      Date: '',
+      Details: '',
+      Image1: ''
+     });
+
+
+     
+         const handleInputChange = (id: string, value: string) => {
+           setFormData(prev => ({
+             ...prev,
+             [id]: value
+           }));
+         };
+       
+         const handleModalShow = () => {
+           setFormData({ id: '', Date: '', Details: '', Image1: '' });
+           setUpdateMode(false);
+           setShowModal(true);
+         };
+       
+         const handleUpdateModalShow = (logs: typeof formData) => {
+           setFormData(logs);
+           setUpdateMode(true);
+           setShowModal(true);
+         };
+       
+         const handleModalHide = () => setShowModal(false);
+       
+         const handleSubmit = () => {
+           dispatch(addItem(formData)); 
+           if (Object.values(formData).every(val => val !== '')) {
+             if (updateMode) {
+               dispatch(updateItem(formData)); 
+             } else {
+              
+             }
+             handleModalHide();
+           } else {
+             alert('Please fill all fields!');
+           }
+         };
+  const rows=logs.map(log=>({
+    id:log.id,Date:log.Date,Details:log.Details,Image1:log.Image1}))
   const LogsInputs = [
-    { id: 'Id', placeholder: 'ID', ariaLabel: 'ID', disabled: true, style: { backgroundColor: 'rgba(0,230,200,0.08)', color: 'rgba(255,255,255,0.59)' } },
+    { id: 'id', placeholder: 'ID', ariaLabel: 'ID', style: { backgroundColor: 'rgba(0,230,200,0.08)', color: 'rgba(255,255,255,0.59)' } },
     { id: 'Date', placeholder: 'Date', ariaLabel: 'Date' },
     { id: 'Details', placeholder: 'Details', ariaLabel: 'Details' },
-    { id: 'image1', placeholder: 'Select Obseved Image', ariaLabel: 'Select Image', type: 'file' },
+    { id: 'Image1', placeholder: 'Select Obseved Image', ariaLabel: 'Select Image', type: 'file' },
 
     
     
    
   ];
 
-  const headers = ['ID', 'Date', 'Details', 'Image','Actions'];
+  const headers = ['ID', 'Date', 'Details', 'Image'];
   return (
     <div>
     <HeaderContainer />
@@ -52,15 +97,26 @@ function LogsPage() {
                     onClick={handleModalShow} 
                   />
               </div>
-              <Table rows={rows} headers={headers} />
+              <Table
+                  rows={rows}
+                  headers={headers}
+                  onEdit={handleUpdateModalShow} 
+                />
             </GlassCard>
           </div>
         </div>
       </div>
       {showModal && (
-                    <ModalPage onClose={handleModalHide} inputs={LogsInputs} btnLabel="Add Logs" title="Add Logs"/>
-                      
-                  )}
+        <ModalPage
+          onClose={handleModalHide}
+          inputs={LogsInputs}
+          btnLabel={updateMode ? 'Update Staff' : 'Add Staff'}
+          title={updateMode ? 'Update Staff' : 'Add Staff'}
+          onSubmit={handleSubmit}
+          formData={formData}
+          onInputChange={handleInputChange}
+        />
+      )}
     </BodyContainer>
   </div>
  

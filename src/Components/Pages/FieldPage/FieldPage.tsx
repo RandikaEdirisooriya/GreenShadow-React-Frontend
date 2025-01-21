@@ -1,5 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../store';
+import { addItem, updateItem } from '../../../Reducer/slice/FieldItem';
 import HeaderContainer from '../../HeadersContainer/HeaderContainer';
 import BodyContainer from '../../BodyContainer/BodyContainer';
 import TitleSection from '../../Components-Pages/TitleComponent/TitleSection';
@@ -12,23 +15,78 @@ import Table from '../../Components-Pages/Table/Table';
 import ModalPage from '../../Components-Pages/Modal/modalPage';
 
 function FieldPage() {
+    const field = useSelector((state: RootState) => state.field.items);
+    const dispatch = useDispatch();
    const [showModal, setShowModal] = useState(false);
-    
-      const handleModalShow = () => setShowModal(true);
-      const handleModalHide = () => setShowModal(false);
-  const rows: Record<string, string | number>[] = [
-  
-  ];
+     const [updateMode, setUpdateMode] = useState(false);
+      const [formData, setFormData] = useState({
+        id: '' ,
+        Name: '',
+        Location: '',
+        ExtentSize: '',
+        Cam1: '',
+        Cam2: '',
+        LogId: ''
+      });
+
+
+
+  const handleInputChange = (id: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const handleModalShow = () => {
+    setFormData({ id: '', Name: '', Location: '', ExtentSize: '', Cam1: '', Cam2: '', LogId: '' });
+    setUpdateMode(false);
+    setShowModal(true);
+  };
+
+  const handleUpdateModalShow = (field: typeof formData) => {
+    setFormData(field);
+    setUpdateMode(true);
+    setShowModal(true);
+  };
+
+  const handleModalHide = () => setShowModal(false);
+
+  const handleSubmit = () => {
+   
+    if (Object.values(formData).every(val => val !== '')) {
+     
+      if (updateMode) {
+        dispatch(updateItem(formData));
+      } else {
+        dispatch(addItem(formData));
+      }
+      handleModalHide();
+    } else {
+      alert('Please fill all fields!');
+    }
+  };
+
+  const rows=field.map((field) => ({
+    id: field.id,
+    Name: field.Name,
+    Location: field.Location,
+    ExtentSize: field.ExtentSize,
+    Cam1: field.Cam1,
+    Cam2: field.Cam2,
+    LogId: field.LogId
+  }))
   const FieldInputs = [
-    { id: 'fieldId', placeholder: 'ID', ariaLabel: 'ID', disabled: true, style: { backgroundColor: 'rgba(0,230,200,0.08)', color: 'rgba(255,255,255,0.59)' } },
+    { id: 'id', placeholder: 'ID', ariaLabel: 'ID', style: { backgroundColor: 'rgba(0,230,200,0.08)', color: 'rgba(255,255,255,0.59)' } },
     { id: 'Name', placeholder: 'Name', ariaLabel: 'Name' },
     { id: 'Location', placeholder: 'Location', ariaLabel: 'Location' },
-    { id: 'image1', placeholder: 'Select Image One', ariaLabel: 'Select Image', type: 'file' },
-    { id: 'image2', placeholder: 'Select Image Two', ariaLabel: 'Select Image', type: 'file' },
+    { id: 'ExtentSize', placeholder: 'ExtentSize', ariaLabel: 'ExtentSize' },
+    { id: 'Cam1', placeholder: 'Select Image One', ariaLabel: 'Select Image', type: 'file' },
+    { id: 'Cam2', placeholder: 'Select Image Two', ariaLabel: 'Select Image', type: 'file' },
     
     
     {
-      id: 'log',
+      id: 'LogId',
       placeholder: 'Select Log ID',
       ariaLabel: 'Log ID',
       type: 'select',
@@ -36,7 +94,7 @@ function FieldPage() {
     },
   ];
 
-  const headers = ['ID', 'Name', 'Location', 'Extent Size', 'Cam 1', 'Cam2','Log Id','Actions'];
+  const headers = ['ID', 'Name', 'Location', 'Extent Size', 'Cam 1', 'Cam2','Log Id'];
   return (
     <div>
     <HeaderContainer />
@@ -59,15 +117,22 @@ function FieldPage() {
                     onClick={handleModalShow} 
                   />
               </div>
-              <Table rows={rows} headers={headers} />
+              <Table rows={rows} headers={headers} onEdit={handleUpdateModalShow} />
             </GlassCard>
           </div>
         </div>
       </div>
       {showModal && (
-                    <ModalPage onClose={handleModalHide} inputs={FieldInputs} btnLabel="Add Field" title="Add Field"/>
-                      
-                  )}
+        <ModalPage
+          onClose={handleModalHide}
+          inputs={FieldInputs}
+          btnLabel={updateMode ? 'Update Field' : 'Add Field'}
+          title={updateMode ? 'Update Field' : 'Add Field'}
+          onSubmit={handleSubmit}
+          formData={formData}
+          onInputChange={handleInputChange}
+        />
+      )}
     </BodyContainer>
   </div>
  

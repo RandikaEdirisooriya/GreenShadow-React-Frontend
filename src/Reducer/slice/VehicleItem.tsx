@@ -16,6 +16,9 @@ const vehicleItemSlice = createSlice({
         addItem: (state, action: PayloadAction<VehicleData>) => {
             state.items.push(action.payload);
         },
+        getItems: (state, action: PayloadAction<VehicleData[]>) => {
+            state.items = action.payload;
+        },
         removeItem: (state, action: PayloadAction<string>) => {
             state.items = state.items.filter(item => item.id !== action.payload);
         },

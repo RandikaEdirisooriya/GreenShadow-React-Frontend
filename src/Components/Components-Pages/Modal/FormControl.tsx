@@ -8,7 +8,8 @@ interface FormControlProps {
         type?: string;
         disabled?: boolean;
         style?: React.CSSProperties;
-        options?: { value: string; label: string }[];
+        options?: { value: string; label: string }[]; // For select options
+        value?: string;
     }[];
     onInputChange: (id: string, value: string) => void;
 }
@@ -25,6 +26,7 @@ const FormControl: React.FC<FormControlProps> = ({ inputs, onInputChange }) => {
                                 id={input.id}
                                 required
                                 aria-label={input.ariaLabel}
+                                value={input.value || ""} // Pre-fill value
                                 onChange={(e) => onInputChange(input.id, e.target.value)}
                             >
                                 <option value="">{input.placeholder}</option>
@@ -38,6 +40,25 @@ const FormControl: React.FC<FormControlProps> = ({ inputs, onInputChange }) => {
                     );
                 }
 
+                // Handle file input type
+                if (input.type === 'file') {
+                    return (
+                        <div className="mb-1" key={index}>
+                            <input
+                                type="file"
+                                className="form-control1"
+                                id={input.id}
+                                required
+                                aria-label={input.ariaLabel}
+                                disabled={input.disabled}
+                                style={input.style}
+                                onChange={(e) => onInputChange(input.id, e.target.files ? e.target.files[0].name : '')}
+                            />
+                        </div>
+                    );
+                }
+
+                // Handle other types of input (text, etc.)
                 return (
                     <div className="mb-1" key={index}>
                         <input
@@ -47,6 +68,7 @@ const FormControl: React.FC<FormControlProps> = ({ inputs, onInputChange }) => {
                             placeholder={input.placeholder}
                             required
                             aria-label={input.ariaLabel}
+                            value={input.value || ""}
                             disabled={input.disabled}
                             style={input.style}
                             onChange={(e) => onInputChange(input.id, e.target.value)}

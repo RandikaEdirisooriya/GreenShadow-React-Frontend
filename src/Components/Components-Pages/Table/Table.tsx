@@ -1,26 +1,34 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import ModalPage from '../Modal/modalPage';
 import { removeItem } from '../../../Reducer/slice/VehicleItem';
-import { VehicleData } from '../../../models/VehicleData';
+import { removeEquipmentItem  } from '../../../Reducer/slice/EquipmentItem';
+import { removeCropItem  } from '../../../Reducer/slice/CropItem';
+import { removeFieldItem  } from '../../../Reducer/slice/FieldItem';
+import { removeStaffItem  } from '../../../Reducer/slice/StaffItem';
+import { removeLogItem  } from '../../../Reducer/slice/LogItem';
 
-interface TableProps {
-  rows: Array<VehicleData>;
+
+
+interface TableProps<T extends { id: string | number }> {
+  rows: Array<T>;
   headers: string[];
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
-  handleModalShow: () => void;
+  onEdit: (item: T) => void;
 }
 
-function Table({ rows, headers, setFormData, handleModalShow }: TableProps) {
+const Table = <T extends { id: string | number }>({ rows, headers, onEdit }: TableProps<T>) => {
   const dispatch = useDispatch();
 
-  const handleDelete = (id: string) => {
-    dispatch(removeItem(id));
+  const handleEdit = (item: T) => {
+    onEdit(item); 
   };
 
-  const handleEdit = (vehicle: VehicleData) => {
-    setFormData(vehicle);
-    handleModalShow();
+  const handleDelete = (id: string | number) => {
+    dispatch(removeItem(id)); 
+    dispatch(removeEquipmentItem(id));
+    dispatch(removeCropItem(id));
+    dispatch(removeFieldItem(id));
+    dispatch(removeStaffItem(id));
+    dispatch(removeLogItem(id));
   };
 
   return (
@@ -52,7 +60,7 @@ function Table({ rows, headers, setFormData, handleModalShow }: TableProps) {
                   </button>
                   <button
                     className="btn btn-link text-danger p-0 delete-btn"
-                    onClick={() => handleDelete(row.id as string)}
+                    onClick={() => handleDelete(row.id)}
                   >
                     <i className="bi bi-trash-fill"></i>
                   </button>
@@ -64,6 +72,6 @@ function Table({ rows, headers, setFormData, handleModalShow }: TableProps) {
       </table>
     </div>
   );
-}
+};
 
 export default Table;

@@ -10,16 +10,83 @@ import '../Pages.css'
 import GlassCard from '../../Components-Pages/GlassCard/GlassCard';
 import Button from '../../Components-Pages/Button/Button';
 import Table from '../../Components-Pages/Table/Table';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../../store';
+import { addItem, updateItem } from '../../../Reducer/slice/StaffItem';
 function StaffPage() {
-  const rows: Record<string, string | number>[] = [
+
+const staffs = useSelector((state: RootState) => state.staff.items);
+  const dispatch = useDispatch();
+ const [showModal, setShowModal] = useState(false);
+  const [updateMode, setUpdateMode] = useState(false);
+  const [formData, setFormData] = useState({
+    id: '',
+    role: '',
+    firstName: '',
+    lastName: '',
+    designation: '',
+    gender: '',
+    joiningDate: '',
+    dob: '',
+    address: '',
+    phoneNumber: '',
+    email: '',
+    LogId: ''
+  });
   
-  ];
-    const [showModal, setShowModal] = useState(false);
-      
-        const handleModalShow = () => setShowModal(true);
-        const handleModalHide = () => setShowModal(false);
+  
+    const handleInputChange = (id: string, value: string) => {
+      setFormData(prev => ({
+        ...prev,
+        [id]: value
+      }));
+    };
+  
+    const handleModalShow = () => {
+      setFormData({ id: '', role: '', firstName: '', lastName: '', designation: '', gender: '', joiningDate: '', dob: '', address: '', phoneNumber: '', email: '', LogId: '' });
+      setUpdateMode(false);
+      setShowModal(true);
+    };
+  
+    const handleUpdateModalShow = (staff: typeof formData) => {
+      setFormData(staff);
+      setUpdateMode(true);
+      setShowModal(true);
+    };
+  
+    const handleModalHide = () => setShowModal(false);
+  
+    const handleSubmit = () => {
+      dispatch(addItem(formData)); 
+      if (Object.values(formData).every(val => val !== '')) {
+        if (updateMode) {
+          dispatch(updateItem(formData)); 
+        } else {
+         
+        }
+        handleModalHide();
+      } else {
+        alert('Please fill all fields!');
+      }
+    };
+
+  const rows=staffs.map((staff) => ({
+    id: staff.id,
+    role: staff.role,
+    firstName: staff.firstName,
+    lastName: staff.lastName,
+    designation: staff.designation,
+    gender: staff.gender,
+    joiningDate: staff.joiningDate,
+    dob: staff.dob,
+    address: staff.address,
+    phoneNumber: staff.phoneNumber,
+    email: staff.email,
+    LogId: staff.LogId
+  }));
+   
         const staffInputs = [
-          { id: 'staffCode', placeholder: 'Staff Code', ariaLabel: 'Staff Code' },
+          { id: 'id', placeholder: 'Staff Code', ariaLabel: 'Staff Code' },
           { id: 'firstName', placeholder: 'First Name', ariaLabel: 'First Name' },
           { id: 'lastName', placeholder: 'Last Name', ariaLabel: 'Last Name' },
           {
@@ -33,14 +100,14 @@ function StaffPage() {
               { value: 'Supervisor', label: 'Supervisor' },
             ],
           },
-          { id: 'joinedDate', placeholder: 'Joined Date', ariaLabel: 'Joined Date', type: 'date' },
+          { id: 'joiningDate', placeholder: 'Joined Date', ariaLabel: 'Joined Date', type: 'date' },
           { id: 'dob', placeholder: 'Date of Birth', ariaLabel: 'Date of Birth', type: 'date' },
           { id: 'buildingName', placeholder: 'Building Name', ariaLabel: 'Building Name' },
           { id: 'laneName', placeholder: 'Lane Name', ariaLabel: 'Lane Name' },
-          { id: 'city', placeholder: 'City', ariaLabel: 'City' },
+          { id: 'address', placeholder: 'City', ariaLabel: 'City' },
           { id: 'province', placeholder: 'Province', ariaLabel: 'Province' },
           { id: 'postalCode', placeholder: 'Postal Code', ariaLabel: 'Postal Code' },
-          { id: 'contactNumber', placeholder: 'Contact Number', ariaLabel: 'Contact Number', type: 'tel' },
+          { id: 'phoneNumber', placeholder: 'Contact Number', ariaLabel: 'Contact Number', type: 'tel' },
           {
             id: 'gender',
             placeholder: 'Select Gender',
@@ -65,7 +132,7 @@ function StaffPage() {
             ],
           },
           {
-            id: 'logId',
+            id: 'LogId',
             placeholder: 'Select Log ID',
             ariaLabel: 'Log ID',
             type: 'select',
@@ -78,7 +145,7 @@ function StaffPage() {
       
       
 
-  const headers = ['ID', 'ROLE', 'Last Name', 'Designation', 'Gender','Joining Date' ,'Date of Birth','Address','Phone Number','Email','Actions'];
+  const headers = ['ID', 'ROLE','First Name', 'Last Name', 'Designation', 'Gender','Joining Date' ,'Date of Birth','Address','Phone Number','Email','Log Id'];
   return (
     <div>
     <HeaderContainer />
@@ -101,15 +168,26 @@ function StaffPage() {
                     onClick={handleModalShow} 
                   />
               </div>
-              <Table rows={rows} headers={headers} />
+              <Table
+                  rows={rows}
+                  headers={headers}
+                  onEdit={handleUpdateModalShow} 
+                />
             </GlassCard>
           </div>
         </div>
       </div>
       {showModal && (
-                    <ModalPage onClose={handleModalHide} inputs={staffInputs} btnLabel="Add Staff" title="Add Staff"/>
-                      
-                  )}
+        <ModalPage
+          onClose={handleModalHide}
+          inputs={staffInputs}
+          btnLabel={updateMode ? 'Update Staff' : 'Add Staff'}
+          title={updateMode ? 'Update Staff' : 'Add Staff'}
+          onSubmit={handleSubmit}
+          formData={formData}
+          onInputChange={handleInputChange}
+        />
+      )}
     </BodyContainer>
   </div>
  

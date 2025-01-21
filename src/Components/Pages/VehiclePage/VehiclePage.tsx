@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../store';
-import { addItem } from '../../../Reducer/slice/VehicleItem';
+import { addItem, updateItem } from '../../../Reducer/slice/VehicleItem';
 import ModalPage from '../../Components-Pages/Modal/modalPage';
 import HeaderContainer from '../../HeadersContainer/HeaderContainer';
 import BodyContainer from '../../BodyContainer/BodyContainer';
@@ -14,7 +14,11 @@ import Button from '../../Components-Pages/Button/Button';
 import Table from '../../Components-Pages/Table/Table';
 
 function VehiclePage() {
+  const vehicles = useSelector((state: RootState) => state.vehicle.items);
+  const dispatch = useDispatch();
+
   const [showModal, setShowModal] = useState(false);
+  const [updateMode, setUpdateMode] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     PlateNumber: '',
@@ -24,10 +28,8 @@ function VehiclePage() {
     staffId: ''
   });
 
-  const vehicles = useSelector((state: RootState) => state.vehicle.items);
-  const dispatch = useDispatch(); // Hook for dispatching actions
+  
 
-  // Handle form input changes
   const handleInputChange = (id: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -35,18 +37,32 @@ function VehiclePage() {
     }));
   };
 
-  // Handle form submission to add vehicle
+  const handleModalShow = () => {
+    setFormData({ id: '', PlateNumber: '', Category: '', status: '', FuelType: '', staffId: '' });
+    setUpdateMode(false);
+    setShowModal(true);
+  };
+
+  const handleUpdateModalShow = (vehicle: typeof formData) => {
+    setFormData(vehicle);
+    setUpdateMode(true);
+    setShowModal(true);
+  };
+
+  const handleModalHide = () => setShowModal(false);
+
   const handleSubmit = () => {
     if (Object.values(formData).every(val => val !== '')) {
-      dispatch(addItem(formData)); // Dispatching the action to Redux store
-      handleModalHide(); // Close modal after submit
+      if (updateMode) {
+        dispatch(updateItem(formData)); 
+      } else {
+        dispatch(addItem(formData)); 
+      }
+      handleModalHide();
     } else {
       alert('Please fill all fields!');
     }
   };
-
-  const handleModalShow = () => setShowModal(true);
-  const handleModalHide = () => setShowModal(false);
 
   const rows = vehicles.map(vehicle => ({
     id: vehicle.id,
@@ -58,7 +74,7 @@ function VehiclePage() {
   }));
 
   const VehicleInputs = [
-    { id: 'id', placeholder: 'ID', ariaLabel: 'ID' },
+    { id: 'id', placeholder: 'ID', ariaLabel: 'ID', disabled: updateMode },
     { id: 'PlateNumber', placeholder: 'Plate Number', ariaLabel: 'PlateNumber' },
     { id: 'Category', placeholder: 'Category', ariaLabel: 'Category' },
     { id: 'status', placeholder: 'Status', ariaLabel: 'status' },
@@ -92,7 +108,6 @@ function VehiclePage() {
                 <h1>Vehicle</h1>
               </GlassCard>
             </div>
-
             <div className="glass-cards">
               <GlassCard>
                 <div className="d-flex justify-content-between align-items-center mb-3">
@@ -101,11 +116,7 @@ function VehiclePage() {
                 <Table
                   rows={rows}
                   headers={headers}
-                  setFormData={setFormData}
-                  handleModalShow={handleModalShow}
-                  
-                 
-
+                  onEdit={handleUpdateModalShow} 
                 />
               </GlassCard>
             </div>
@@ -116,8 +127,8 @@ function VehiclePage() {
         <ModalPage
           onClose={handleModalHide}
           inputs={VehicleInputs}
-          btnLabel="Add Vehicle"
-          title="Add Vehicle"
+          btnLabel={updateMode ? 'Update Vehicle' : 'Add Vehicle'}
+          title={updateMode ? 'Update Vehicle' : 'Add Vehicle'}
           onSubmit={handleSubmit}
           formData={formData}
           onInputChange={handleInputChange}
